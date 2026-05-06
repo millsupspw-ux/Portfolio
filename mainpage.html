@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<!-- บอก Browser ว่านี่คือไฟล์ HTML เวอร์ชั่นล่าสุด -->
+<html lang="en">
+
+<!-- ============================================================
+     HEAD — ส่วนที่ไม่แสดงบนหน้าเว็บ แต่ Browser ต้องอ่านก่อน
+     ประกอบด้วย: การตั้งค่า / Font / CSS ทั้งหมด
+     ============================================================ -->
+<head>
+
+  <!-- กำหนดการเข้ารหัสตัวอักษร ให้รองรับภาษาไทย, emoji ฯลฯ -->
+  <meta charset="UTF-8" />
+
+  <!-- ทำให้เว็บ Responsive บนมือถือ — ความกว้างเท่ากับหน้าจอ, zoom 100% -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ข้อความที่แสดงบน Tab ของ Browser และใน Google Search -->
+  <title>Supawed Roemklang — UX/UI Designer</title>
+
+  <!-- เชื่อมต่อ Server ของ Google Fonts ล่วงหน้า เพื่อให้โหลด Font เร็วขึ้น -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- โหลด 3 Font จาก Google:
+       - DM Serif Display → หัวข้อใหญ่, ชื่อ (ดูหรูหรา)
+       - DM Mono         → label เล็ก, ตัวเลข (ดู technical)
+       - Outfit          → ข้อความทั่วไป (อ่านง่าย)       -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- ============================================================
+       STYLE — CSS ทั้งหมดอยู่ในนี้
+       แบ่งเป็นหมวด: Reset → Variables → Layout → แต่ละ Section → Animation → Responsive
+       ============================================================ -->
+  <style>
+
+    /* ──────────────────────────────────────────────────────────
+       RESET — ลบค่า Default ของ Browser ทิ้ง เพื่อควบคุมเองทั้งหมด
+       * หมายถึง "ทุก element ในหน้า"
+       ────────────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box; /* padding ไม่บวกเพิ่มออกนอก ทำให้คำนวณขนาดง่ายขึ้น */
+      margin: 0;              /* ลบ margin เริ่มต้นของ Browser */
+      padding: 0;             /* ลบ padding เริ่มต้นของ Browser */
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       CSS VARIABLES — ตัวแปรสีและ Animation ใช้ได้ทั่วทั้งไฟล์
+       แก้ที่นี่ที่เดียว สีเปลี่ยนทั้งเว็บเลย
+       ────────────────────────────────────────────────────────── */
+    :root {
+      /* สีหลัก — โทนน้ำตาลอุ่น ให้ feel กระดาษสา */
+      --bg:        #EFE5D8;   /* พื้นหลังหลัก — น้ำตาลกระดาษสา */
+      --bg-dark:   #E8DAC8;   /* พื้นหลังเข้มกว่าเล็กน้อย สำหรับ section สลับ */
+      --surface:   #F5EFE6;   /* การ์ด, panel — สว่างกว่าพื้นเล็กน้อย */
+      --ink:       #2C1810;   /* ข้อความหลัก — น้ำตาลเข้มมาก */
+      --ink2:      #6B4A2E;   /* ข้อความรอง — น้ำตาลกลาง */
+      --ink3:      #9A7A5A;   /* label เล็ก, เส้น — น้ำตาลอ่อน */
+      --line:      rgba(44,24,16,.10); /* เส้นแบ่ง — น้ำตาลโปร่งแสง */
+      --paper-dark:#3D2010;   /* สีเข้มสำหรับ Contact section */
+
+      /* Animation curve — การเคลื่อนไหวแบบ spring ดูเป็นธรรมชาติ */
+      --ease: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       HTML & BODY — การตั้งค่าพื้นฐานทั้งหน้า
+       ────────────────────────────────────────────────────────── */
+
+    /* scroll-behavior: smooth → เมื่อกดปุ่ม Nav จะเลื่อนแบบนุ่มนวล ไม่กระโดด */
+    html { scroll-behavior: smooth; }
+
+    body {
+      /* Texture กระดาษสา — สร้างจาก SVG noise pattern inline */
+      background-color: var(--bg);
+      background-image:
+        /* ชั้นที่ 1: เส้นใยกระดาษ — เส้นแนวทแยงบางๆ */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"),
+        /* ชั้นที่ 2: gradient อ่อนๆ ให้ความลึก */
+        radial-gradient(ellipse at 30% 20%, rgba(220,195,160,.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(160,120,70,.3) 0%, transparent 50%);
+      background-size: 300px 300px, 100% 100%, 100% 100%;
+
+      color: var(--ink);                   /* สีข้อความเริ่มต้น */
+      font-family: 'Outfit', sans-serif;   /* Font หลัก */
+      font-weight: 300;                    /* ตัวบาง (light) เป็นค่าเริ่มต้น */
+      font-size: 16px;                     /* ขนาดตัวอักษรเริ่มต้น */
+      line-height: 1.7;                    /* ระยะห่างบรรทัด 170% */
+      -webkit-font-smoothing: antialiased; /* ตัวอักษรคมชัดขึ้นบน Mac */
+      cursor: none;                        /* ซ่อน cursor ของ Browser เพราะสร้างเองใน JS */
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       CUSTOM CURSOR — จุดกลมที่เคลื่อนตามเมาส์
+       ควบคุมด้วย JavaScript ด้านล่าง
+       ────────────────────────────────────────────────────────── */
+    #cursor {
+      position: fixed;           /* ติดกับหน้าจอ ไม่เลื่อนตาม scroll */
+      width: 8px; height: 8px;
+      background: var(--ink);    /* สีจุด */
+      border-radius: 50%;        /* ทำสี่เหลี่ยมให้เป็นวงกลม */
+      pointer-events: none;      /* ไม่บัง click ของ element ข้างล่าง */
+      z-index: 9999;             /* ลอยอยู่เหนือทุกอย่าง */
+      transform: translate(-50%, -50%); /* จุดอยู่ตรงกลาง ไม่ใช่มุมบนซ้าย */
+      transition: width .25s var(--ease), height .25s var(--ease), opacity .2s;
+    }
+    /* เมื่อ hover บน link/card — cursor ขยายใหญ่และโปร่งแสง */
+    #cursor.grow { width: 40px; height: 40px; opacity: .12; }
+
+    /* ──────────────────────────────────────────────────────────
+       NAVIGATION — แถบเมนูด้านบน ติดหน้าจอตลอด
+       ────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;           /* ติดด้านบน ไม่เลื่อนตาม scroll */
+      top: 0; left: 0; right: 0; /* ชิดขอบทุกด้าน */
+      display: flex;             /* จัดของข้างในเป็นแถว */
+      align-items: center;
+      justify-content: space-between; /* โลโก้ซ้าย, ลิงก์ขวา */
+      padding: 1.5rem 4rem;
+      z-index: 100;              /* ลอยเหนือ content แต่ต่ำกว่า cursor */
+      background: rgba(239,229,216,0); /* โปร่งใสตอนแรก */
+      transition: background .4s, backdrop-filter .4s;
+    }
+    /* เมื่อ scroll ลง JS จะเพิ่ม class .scrolled → Nav กลายเป็น frosted glass */
+    nav.scrolled {
+      background: rgba(239,229,216,.92);
+      backdrop-filter: blur(14px); /* เบลอพื้นหลังข้างล่าง */
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem; letter-spacing: -.02em;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: .78rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink2); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ปุ่ม Resume ใน Nav — มีกรอบ แตกต่างจากลิงก์ทั่วไป */
+    .nav-resume {
+      font-family: 'DM Mono', monospace;
+      font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+      padding: .45rem 1.1rem;
+      border: 1px solid var(--ink2);
+      color: var(--ink2); text-decoration: none;
+      transition: background .2s, color .2s, border-color .2s; cursor: none;
+    }
+    .nav-resume:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    /* ──────────────────────────────────────────────────────────
+       LAYOUT HELPERS — กล่องกึ่งกลางและเส้นแบ่ง
+       ────────────────────────────────────────────────────────── */
+
+    /* .container — จำกัดความกว้าง และจัดกึ่งกลาง ใช้ทุก Section */
+    .container { max-width: 1100px; margin: 0 auto; padding: 7rem 4rem; }
+
+    /* .divider — เส้นแบ่งบางๆ ระหว่าง Section */
+    .divider { height: 1px; background: var(--line); max-width: 1100px; margin: 0 auto; }
+
+    /* ──────────────────────────────────────────────────────────
+       HERO SECTION — หน้าแรกที่เห็นเมื่อเปิดเว็บ
+       จัดกึ่งกลาง ทั้ง horizontal และ vertical
+       ────────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;         /* สูงเต็มหน้าจอเสมอ */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;   /* จัดกึ่งกลางแนวตั้ง */
+      align-items: center;       /* จัดกึ่งกลางแนวนอน */
+      text-align: center;        /* ข้อความอยู่กึ่งกลาง */
+      padding: 9rem 2rem 5rem;
+      position: relative; overflow: hidden;
+      /* พื้นหลัง Hero เข้มขึ้นเล็กน้อยเพื่อแยกจาก section อื่น */
+      background-color: var(--bg-dark);
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.1'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse at 50% 40%, rgba(220,195,160,.5) 0%, transparent 65%);
+      background-size: 300px 300px, 100% 100%;
+    }
+
+    /* กล่องรวม Hero content — จำกัดความกว้าง */
+    .hero-inner {
+      max-width: 780px;   /* ไม่กว้างเกินไป อ่านสบาย */
+      width: 100%;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* จุดเขียวกระพริบ "Available for hire" */
+    .hero-status {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: 'DM Mono', monospace; font-size: .68rem; color: #3a6b4a;
+      letter-spacing: .14em; text-transform: uppercase; margin-bottom: 1.5rem;
+      background: rgba(58,107,74,.1); border: 1px solid rgba(58,107,74,.25);
+      padding: .35rem .9rem;
+      opacity: 0; transform: translateY(12px);
+      animation: fadeUp .7s var(--ease) .1s forwards;
+    }
+    /* จุดกลมกระพริบ — สร้างด้วย CSS ไม่ต้องใช้ image */
+    .hero-status::before {
+      content: ''; display: block;
+      width: 6px; height: 6px; border-radius: 50%; background: #3a6b4a;
+      animation: pulse 2s ease-in-out infinite; /* กระพริบซ้ำตลอด */
+    }
+    @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.3 } }
+
+    /* ข้อความเล็กบอก ตำแหน่ง + ที่อยู่ */
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace; font-size: .73rem; color: var(--ink3);
+      letter-spacing: .18em; text-transform: uppercase; margin-bottom: 1rem;
+      opacity: 0; transform: translateY(14px);
+      animation: fadeUp .8s var(--ease) .25s forwards;
+    }
+
+    /* ชื่อหลัก — ใหญ่ที่สุดในหน้า */
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      /* clamp(min, preferred, max) — ขนาดปรับตามหน้าจอ ไม่เล็กหรือใหญ่เกิน */
+      font-size: clamp(3.2rem, 8vw, 7rem);
+      line-height: 1.0; letter-spacing: -.03em;
+      opacity: 0; transform: translateY(22px);
+      animation: fadeUp .9s var(--ease) .38s forwards;
+    }
+    /* ชื่อ Roemklang — ตัวเอียง สีจาง */
+    .hero-title em { font-style: italic; color: var(--ink2); }
+
+    /* pill บอกตำแหน่งและ process */
+    .hero-role-pill {
+      display: inline-block; font-family: 'DM Mono', monospace; font-size: .72rem;
+      letter-spacing: .1em; color: var(--ink2);
+      border: 1px solid var(--line); padding: .35rem .9rem; margin-top: 1.25rem;
+      opacity: 0; transform: translateY(12px);
+      animation: fadeUp .7s var(--ease) .55s forwards;
+    }
+
+    /* ประโยค 1 บรรทัด บอกคุณค่าของตัวเอง */
+    .hero-desc {
+      margin-top: 1.75rem; font-size: 1.05rem; color: var(--ink2);
+      max-width: 520px; line-height: 1.8;
+      opacity: 0; transform: translateY(14px);
+      animation: fadeUp .8s var(--ease) .65s forwards;
+    }
+
+    /* กลุ่มปุ่ม CTA */
+    .hero-actions {
+      margin-top: 2.5rem; display: flex; gap: 1.25rem;
+      align-items: center; flex-wrap: wrap; justify-content: center;
+      opacity: 0; transform: translateY(14px);
+      animation: fadeUp .8s var(--ease) .78s forwards;
+    }
+
+    /* ปุ่ม — 3 สไตล์ */
+    /* Primary: พื้นดำทึบ — Action หลัก */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: .85rem 2rem; background: var(--ink); color: var(--bg);
+      font-family: 'Outfit', sans-serif; font-size: .85rem; font-weight: 500;
+      letter-spacing: .04em; text-decoration: none; border: none; cursor: none;
+      transition: opacity .2s, transform .25s var(--ease);
+    }
+    .btn-primary:hover { opacity: .82; transform: translateY(-2px); }
+
+    /* Outline: กรอบใส — Action รอง */
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: .82rem 1.75rem; background: transparent; color: var(--ink);
+      font-family: 'Outfit', sans-serif; font-size: .85rem; font-weight: 500;
+      letter-spacing: .04em; text-decoration: none;
+      border: 1px solid var(--ink2); cursor: none;
+      transition: border-color .2s, transform .25s var(--ease);
+    }
+    .btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+    /* Ghost: เส้นใต้เท่านั้น — Action เบา */
+    .btn-ghost {
+      font-size: .85rem; font-weight: 500; color: var(--ink2);
+      text-decoration: none; letter-spacing: .04em;
+      border-bottom: 1px solid var(--ink3); padding-bottom: 2px; cursor: none;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+
+    /* Stats row — ตัวเลข social proof 3 ช่อง */
+    .hero-stats {
+      display: flex; gap: 3rem; margin-top: 3rem;
+      padding-top: 2.5rem; border-top: 1px solid var(--line);
+      justify-content: center; /* จัดกึ่งกลาง */
+      opacity: 0; transform: translateY(12px);
+      animation: fadeUp .7s var(--ease) .9s forwards;
+    }
+    .hero-stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem; letter-spacing: -.02em; color: var(--ink);
+      text-align: center;
+    }
+    .hero-stat-label {
+      font-family: 'DM Mono', monospace; font-size: .65rem;
+      color: var(--ink3); letter-spacing: .12em; text-transform: uppercase;
+      margin-top: .15rem; text-align: center;
+    }
+
+    /* ข้อความ Scroll ด้านล่างซ้าย */
+    .hero-scroll {
+      position: absolute; bottom: 3rem; left: 4rem;
+      font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--ink3);
+      letter-spacing: .15em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 1rem;
+      opacity: 0; animation: fadeUp .6s var(--ease) 1.2s forwards;
+    }
+    .hero-scroll::before { content: ''; display: block; width: 40px; height: 1px; background: var(--ink3); }
+
+    /* ตัวอักษรยักษ์พื้นหลัง Hero */
+    .hero-bg-text {
+      position: absolute; right: -1rem; bottom: -2rem;
+      font-family: 'DM Serif Display', serif; font-style: italic;
+      font-size: clamp(10rem, 20vw, 18rem);
+      color: rgba(44,24,16,.05); line-height: 1;
+      pointer-events: none; user-select: none; /* ไม่รับ click, ไม่ select ได้ */
+      opacity: 0; animation: fadeUp .8s var(--ease) .9s forwards;
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       ABOUT SECTION — แนะนำตัว, ประสบการณ์, ทักษะ
+       ────────────────────────────────────────────────────────── */
+
+    /* 2 คอลัมน์: รูป (1fr) | ข้อความ (1.65fr) */
+    #about { background-color: var(--bg); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"); background-size: 300px 300px; }
+    #about .container { display: grid; grid-template-columns: 1fr 1.65fr; gap: 6rem; align-items: start; }
+
+    /* label เล็กบอก section เช่น "01 — About" */
+    .about-label {
+      font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--ink3);
+      letter-spacing: .18em; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+
+    /* กรอบรูปโปรไฟล์ — sticky ติดหน้าจอขณะ scroll อ่านข้อความ */
+    .about-portrait {
+      aspect-ratio: 3/4;          /* สัดส่วน portrait */
+      position: sticky; top: 7rem; /* ติดหน้าจอเมื่อ scroll ผ่าน */
+      overflow: hidden; background: var(--ink);
+    }
+
+    /* Placeholder แทนรูปจริง — gradient + อักษร initials */
+    .portrait-inner {
+      width: 100%; height: 100%;
+      background: linear-gradient(160deg, #3D2010 0%, #8B5A2B 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1rem;
+    }
+    .portrait-inner .initials {
+      font-family: 'DM Serif Display', serif; font-size: 5rem;
+      color: rgba(255,255,255,.12); font-style: italic;
+    }
+    .portrait-inner .p-name {
+      font-family: 'DM Mono', monospace; font-size: .68rem;
+      color: rgba(255,255,255,.25); letter-spacing: .2em; text-transform: uppercase;
+    }
+
+    .about-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      line-height: 1.2; letter-spacing: -.025em; margin-bottom: 1.5rem;
+    }
+    .about-heading em { font-style: italic; color: var(--ink2); }
+
+    .about-text { color: var(--ink2); font-size: .95rem; margin-bottom: 1.2rem; line-height: 1.8; }
+    .about-text strong { color: var(--ink); font-weight: 500; }
+
+    /* บล็อก Experience — มีเส้นแบ่งด้านบน */
+    .exp-block { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+    .exp-label {
+      font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--ink3);
+      letter-spacing: .18em; text-transform: uppercase; margin-bottom: 1.25rem;
+    }
+    .exp-item { margin-bottom: 1.75rem; }
+    .exp-role { font-weight: 500; font-size: .95rem; color: var(--ink); margin-bottom: .2rem; }
+    .exp-company { font-family: 'DM Mono', monospace; font-size: .73rem; color: var(--ink3); margin-bottom: .6rem; }
+    .exp-desc { font-size: .88rem; color: var(--ink2); line-height: 1.75; }
+    .exp-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .8rem; color: var(--ink); font-weight: 500; text-decoration: none;
+      margin-top: .6rem; border-bottom: 1px solid var(--line); padding-bottom: 2px;
+      transition: border-color .2s;
+    }
+    .exp-link:hover { border-color: var(--ink2); }
+
+    /* กล่อง Skills — แสดงเป็น tag เล็กๆ เรียงต่อกัน */
+    .skills-list { display: flex; flex-wrap: wrap; gap: .45rem; list-style: none; margin-top: 2rem; }
+    .skills-list li {
+      font-family: 'DM Mono', monospace; font-size: .7rem;
+      letter-spacing: .1em; padding: .4rem .9rem;
+      border: 1px solid var(--line); color: var(--ink2);
+      transition: border-color .2s, color .2s;
+    }
+    .skills-list li:hover { border-color: var(--ink2); color: var(--ink); }
+
+    /* ──────────────────────────────────────────────────────────
+       WORK SECTION — แสดงรายการ Project เป็น List
+       ────────────────────────────────────────────────────────── */
+    #work { background-color: var(--bg-dark); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E"); background-size: 300px 300px; }
+
+    /* หัวข้อ section — ซ้าย: ชื่อ, ขวา: เลขนับ */
+    .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4rem; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); letter-spacing: -.03em; }
+    .section-count { font-family: 'DM Mono', monospace; font-size: .73rem; color: var(--ink3); letter-spacing: .1em; }
+
+    /* แต่ละ project เป็น row 3 คอลัมน์: ชื่อ | category | ปี */
+    .projects-grid { display: flex; flex-direction: column; }
+    .project-item {
+      display: grid; grid-template-columns: 3fr 1fr 1fr;
+      align-items: center; gap: 2rem; padding: 2rem 0;
+      border-top: 1px solid var(--line); cursor: none; position: relative;
+      transition: padding-left .3s var(--ease);
+    }
+    .project-item:last-child { border-bottom: 1px solid var(--line); }
+    /* hover → เลื่อนเนื้อหาออกซ้าย เล็กน้อย */
+    .project-item:hover { padding-left: .75rem; }
+
+    /* ลูกศร → ทางขวา โผล่เมื่อ hover */
+    .project-item::after {
+      content: '→'; position: absolute; right: 0; font-size: 1.1rem; color: var(--ink3);
+      transform: translateX(-8px); transition: transform .3s var(--ease), color .2s;
+    }
+    .project-item:hover::after { transform: translateX(0); color: var(--ink); }
+
+    .project-num { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--ink3); margin-bottom: .4rem; }
+    .project-name { font-family: 'DM Serif Display', serif; font-size: 1.45rem; letter-spacing: -.02em; transition: color .2s; }
+    .project-item:hover .project-name { color: var(--ink2); }
+    .project-desc { font-size: .87rem; color: var(--ink2); margin-top: .3rem; line-height: 1.6; }
+    .project-category { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--ink3); letter-spacing: .12em; text-transform: uppercase; }
+    .project-year { font-family: 'DM Mono', monospace; font-size: .73rem; color: var(--ink3); text-align: right; }
+
+    /* Preview card ที่ลอยตามเมาส์เมื่อ hover บน project */
+    .project-preview {
+      position: fixed; width: 260px; height: 180px;
+      pointer-events: none; z-index: 200;
+      opacity: 0; transform: scale(.92) rotate(-2deg);
+      transition: opacity .25s var(--ease), transform .3s var(--ease); overflow: hidden;
+    }
+    .project-preview.visible { opacity: 1; transform: scale(1) rotate(0deg); }
+    .project-preview-inner {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    }
+    .prev-label { font-family: 'DM Serif Display', serif; font-size: 1.1rem; font-style: italic; }
+    .prev-tag { font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; opacity: .55; }
+
+    /* ──────────────────────────────────────────────────────────
+       CASE STUDY SECTION — Preview card แบบยุบ คลิกไปอ่านเต็ม
+       ────────────────────────────────────────────────────────── */
+    #casestudy { background-color: var(--surface); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"); background-size: 300px 300px; }
+
+    /* การ์ดรวม — มีกรอบ, เมื่อ hover กรอบเข้มขึ้น */
+    .case-preview-card { border: 1px solid var(--line); padding: 0; overflow: hidden; transition: border-color .2s; }
+    .case-preview-card:hover { border-color: var(--ink2); }
+
+    /* รูป thumbnail ด้านบน — aspect 21:9 (horizontal) */
+    .case-thumb { width: 100%; aspect-ratio: 21/9; overflow: hidden; background: var(--ink); }
+    .case-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease); }
+    /* hover → รูป zoom เล็กน้อย */
+    .case-preview-card:hover .case-thumb img { transform: scale(1.03); }
+
+    /* ส่วนข้อความด้านล่าง — 2 คอลัมน์: เนื้อหา | metadata */
+    .case-preview-body { padding: 2rem 2.5rem 2.5rem; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: end; }
+
+    .case-badge {
+      display: inline-block; font-family: 'DM Mono', monospace; font-size: .65rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      border: 1px solid var(--line); color: var(--ink2);
+      padding: .3rem .75rem; margin-bottom: 1rem;
+    }
+    .case-preview-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.025em; line-height: 1.2; margin-bottom: .75rem; }
+    .case-preview-desc { font-size: .9rem; color: var(--ink2); line-height: 1.75; max-width: 560px; }
+
+    /* Tag list ใต้ description */
+    .case-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: 1.25rem; }
+    .case-tag {
+      font-family: 'DM Mono', monospace; font-size: .62rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      border: 1px solid var(--line); color: var(--ink3); padding: .28rem .65rem;
+    }
+
+    /* Metadata ด้านขวา — Role, Duration, Tools ฯลฯ */
+    .case-meta-mini { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--ink3); letter-spacing: .1em; text-align: right; line-height: 1.9; }
+    .case-meta-mini span { display: block; }
+    .case-meta-mini strong { color: var(--ink2); font-weight: 500; }
+
+    /* ──────────────────────────────────────────────────────────
+       EXPERTISE SECTION — 3 การ์ดทักษะ
+       ────────────────────────────────────────────────────────── */
+    #services { background-color: var(--bg); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"); background-size: 300px 300px; }
+
+    /* 3 คอลัมน์เท่ากัน ห่างกัน 2px (บางมาก ดูเป็นเส้นแบ่ง) */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 4rem; }
+
+    .service-card {
+      padding: 2.5rem 1.75rem; background: var(--surface);
+      border: 1px solid var(--line);
+      transition: border-color .2s, transform .3s var(--ease);
+    }
+    .service-card:hover { border-color: var(--ink2); transform: translateY(-4px); }
+    .service-num { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--ink3); margin-bottom: 1.5rem; }
+    .service-name { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: .7rem; }
+    .service-text { font-size: .88rem; color: var(--ink2); line-height: 1.75; }
+
+    /* Resume strip — แถบเชิญชวนดู Resume อยู่ใต้การ์ด Expertise */
+    .resume-strip {
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--line); padding: 2rem 2.5rem;
+      margin-top: 2px; background: var(--surface); transition: border-color .2s;
+    }
+    .resume-strip:hover { border-color: var(--ink2); }
+    .resume-strip-text p:first-child { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: -.02em; }
+    .resume-strip-text p:last-child { font-size: .85rem; color: var(--ink2); margin-top: .25rem; }
+
+    /* ──────────────────────────────────────────────────────────
+       CONTACT SECTION — พื้นหลังเข้ม ข้อความสว่าง
+       ────────────────────────────────────────────────────────── */
+    #contact {
+      background: var(--paper-dark); color: var(--bg);
+      text-align: center; padding: 10rem 4rem 7rem;
+    }
+    #contact .about-label { color: rgba(239,229,216,.4); }
+    .contact-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1.06; letter-spacing: -.03em; margin-bottom: 1.5rem; }
+    .contact-title em { font-style: italic; color: rgba(239,229,216,.5); }
+    .contact-sub { font-size: 1rem; color: rgba(239,229,216,.6); margin-bottom: 3rem; max-width: 420px; margin-left: auto; margin-right: auto; }
+    .btn-light {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 1rem 2.5rem; background: var(--bg); color: var(--ink);
+      font-family: 'Outfit', sans-serif; font-size: .9rem; font-weight: 500;
+      text-decoration: none; cursor: none;
+      transition: opacity .2s, transform .25s var(--ease);
+    }
+    .btn-light:hover { opacity: .88; transform: translateY(-3px); }
+
+    /* Social links ด้านล่าง Contact */
+    .social-links { display: flex; justify-content: center; gap: 2.5rem; margin-top: 4rem; list-style: none; flex-wrap: wrap; }
+    .social-links li { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .s-label { font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(239,229,216,.35); }
+    .social-links a { font-size: .85rem; color: rgba(239,229,216,.6); text-decoration: none; transition: color .2s; }
+    .social-links a:hover { color: var(--bg); }
+
+    /* ──────────────────────────────────────────────────────────
+       FOOTER — แถบด้านล่างสุด
+       ────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--paper-dark);
+      border-top: 1px solid rgba(196,168,130,.1);
+      padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    footer p { font-family: 'DM Mono', monospace; font-size: .68rem; color: rgba(196,168,130,.25); letter-spacing: .1em; }
+
+    /* ──────────────────────────────────────────────────────────
+       ANIMATIONS — การเคลื่อนไหวเมื่อ scroll
+       ────────────────────────────────────────────────────────── */
+
+    /* fadeUp: เริ่มจากล่าง + โปร่งแสง → ขึ้นมา + ทึบ */
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* .reveal — class เริ่มต้น ซ่อนอยู่ รอ scroll มาถึง */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    /* .visible — JS เพิ่ม class นี้เมื่อ element โผล่บนหน้าจอ */
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ──────────────────────────────────────────────────────────
+       RESPONSIVE — ปรับ Layout สำหรับหน้าจอเล็ก
+       ────────────────────────────────────────────────────────── */
+
+    /* Tablet และ มือถือใหญ่ (< 900px) */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-resume { display: none; } /* ซ่อนปุ่ม Resume บนมือถือ */
+      #hero, .container, #contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+      #about .container { grid-template-columns: 1fr; gap: 2.5rem; } /* รูป + ข้อความ stack ซ้อนกัน */
+      .about-portrait { aspect-ratio: 4/3; position: static; } /* รูปกว้างขึ้น ไม่ sticky */
+      .services-grid { grid-template-columns: 1fr; } /* การ์ด 3 ใบ → stack 1 คอลัมน์ */
+      .project-item { grid-template-columns: 1fr; gap: .4rem; } /* project row → stack */
+      .project-year { text-align: left; }
+      .case-preview-body { grid-template-columns: 1fr; gap: 1rem; }
+      .case-meta-mini { text-align: left; }
+      .resume-strip { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+      footer { flex-direction: column; gap: .75rem; text-align: center; }
+      .hero-bg-text, .hero-scroll, .hero-stats { display: none; } /* ซ่อน decorative บนมือถือ */
+    }
+
+    /* มือถือเล็ก (< 480px) */
+    @media (max-width: 480px) {
+      .nav-links { display: none; } /* ซ่อนเมนูทั้งหมด เหลือแค่โลโก้ */
+    }
+
+  </style>
+</head>
+
+<!-- ============================================================
+     BODY — ส่วนที่แสดงบนหน้าเว็บ ทุกคนมองเห็น
+     ============================================================ -->
+<body>
+
+  <!-- Custom Cursor — จุดกลมที่ JS ควบคุมให้เคลื่อนตามเมาส์ -->
+  <div id="cursor"></div>
+
+  <!-- Project Hover Preview — การ์ดสีที่ลอยตามเมาส์เมื่อ hover บน project -->
+  <div class="project-preview" id="projectPreview">
+    <div class="project-preview-inner" id="projectPreviewInner">
+      <span class="prev-label"></span>
+      <span class="prev-tag"></span>
+    </div>
+  </div>
+
+  <!-- ── Navigation Bar ───────────────────────────────────────
+       id="navbar" ใช้โดย JS เพื่อเพิ่ม class .scrolled
+       ────────────────────────────────────────────────────── -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">Supawed R.</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#casestudy">Case Study</a></li>
+      <li><a href="#services">Expertise</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <!-- ปุ่ม Resume แยกสไตล์จากลิงก์ปกติ -->
+      <li><a href="https://linkedin.com/in/supawed-roemklang-a83b71234/" target="_blank" class="nav-resume">Resume ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero Section ──────────────────────────────────────────
+       หน้าแรก เนื้อหาอยู่กึ่งกลางทั้งแนวนอนและแนวตั้ง
+       ────────────────────────────────────────────────────────── -->
+  <section id="hero">
+    <!-- .hero-inner — กล่องรวม content จำกัดความกว้าง 780px -->
+    <div class="hero-inner">
+
+      <!-- จุดเขียวกระพริบ + ข้อความบอกสถานะพร้อมรับงาน -->
+      <div class="hero-status">Available for full-time &amp; freelance roles</div>
+
+      <!-- ข้อความเล็กบอก ตำแหน่ง / ที่อยู่ / ปี -->
+      <p class="hero-eyebrow">UX/UI Designer — Bangkok, Thailand · 2026</p>
+
+      <!-- ชื่อหลัก — ใหญ่ที่สุดในหน้า em = ตัวเอียงสีจาง -->
+      <h1 class="hero-title">
+        Supawed<br/>
+        <em>Roemklang</em>
+      </h1>
+
+      <!-- pill บอกตำแหน่งและ process ที่ทำได้ -->
+      <div class="hero-role-pill">UX/UI Designer &nbsp;·&nbsp; Research → Prototype → Handoff</div>
+
+      <!-- ประโยคบอกคุณค่า — 1 ประโยค HR อ่านแล้วเข้าใจทันที -->
+      <p class="hero-desc">
+        I turn complex system friction into clear, user-centred interfaces — backed by 3+ years of real data operations experience at NocNoc.
+      </p>
+
+      <!-- กลุ่มปุ่ม CTA — 3 ระดับความสำคัญ -->
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">View Work &nbsp;↓</a>       <!-- หลัก -->
+        <a href="#casestudy" class="btn-outline">Case Study</a>          <!-- รอง -->
+        <a href="mailto:supawedroemklang@gmail.com" class="btn-ghost">Say hello</a> <!-- เบา -->
+      </div>
+
+      <!-- ตัวเลข Social Proof — ยืนยันประสบการณ์จริง -->
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">3+</div>
+          <div class="hero-stat-label">Years experience</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">3K+</div>
+          <div class="hero-stat-label">SKUs managed monthly</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">30</div>
+          <div class="hero-stat-label">Research participants</div>
+        </div>
+      </div>
+
+    </div><!-- /hero-inner -->
+
+    <!-- ตัวอักษร "Music" ยักษ์โปร่งแสง เป็น decorative พื้นหลัง -->
+    <div class="hero-bg-text">Music</div>
+
+    <!-- ข้อความ + เส้น มุมล่างซ้าย บอกให้ scroll ลง -->
+    <div class="hero-scroll">Scroll to explore</div>
+  </section>
+
+  <!-- เส้นแบ่งบางๆ ระหว่าง section -->
+  <div class="divider"></div>
+
+  <!-- ── About Section ──────────────────────────────────────────
+       แนะนำตัว + ประสบการณ์ + ทักษะ
+       Layout: รูป (ซ้าย) | ข้อความ (ขวา)
+       ────────────────────────────────────────────────────────── -->
+  <section id="about">
+    <div class="container">
+
+      <!-- คอลัมน์ซ้าย: รูปโปรไฟล์ -->
+      <div class="about-portrait">
+        <!-- แทนที่ด้วยรูปจริง: <img src="photo.jpg" alt="Supawed" style="width:100%;height:100%;object-fit:cover"> -->
+        <div class="portrait-inner">
+          <span class="initials">SR</span>
+          <span class="p-name">Supawed · Music</span>
+        </div>
+      </div>
+
+      <!-- คอลัมน์ขวา: ข้อความแนะนำตัว -->
+      <div>
+        <!-- label บอก section -->
+        <p class="about-label reveal">01 — About</p>
+
+        <!-- หัวข้อย่อย — em = ตัวเอียงสีจาง -->
+        <h2 class="about-heading reveal">
+          UX/UI Designer who thinks in<br/><em>data &amp; systems.</em>
+        </h2>
+
+        <!-- ย่อหน้าแนะนำตัว -->
+        <p class="about-text reveal">
+          Hi, I'm <strong>Supawed Roemklang</strong> — call me <strong>Music</strong>. I'm a UX/UI Designer with <strong>3+ years of experience</strong> in E-commerce data operations, specialised in bridging complex system workflows and user-centric design.
+        </p>
+        <p class="about-text reveal">
+          My edge: I understand how back-office systems break — because I've worked inside them. I translate operational pain points into precise, scalable interface decisions driven by real KPIs.
+        </p>
+        <p class="about-text reveal">Cat person. Hiker. Always designing something.</p>
+
+        <!-- ประวัติการทำงาน -->
+        <div class="exp-block reveal">
+          <p class="exp-label">Experience</p>
+
+          <div class="exp-item">
+            <div class="exp-role">Seller Information Administrator (Contract)</div>
+            <div class="exp-company">NocNoc &nbsp;·&nbsp; Jul 2022 – Jan 2026 &nbsp;·&nbsp; 3 yrs 7 mos &nbsp;·&nbsp; Bangkok, Hybrid</div>
+            <div class="exp-desc">Managed 3,000+ SKUs monthly · identified UI/workflow friction in back-office systems · relayed UX issues to Product teams · reduced data-entry errors and improved listing quality · onboarded &amp; trained 2–3 new team members.</div>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-role">Freelance Graphic Designer</div>
+            <div class="exp-company">Self-employed &nbsp;·&nbsp; Jan 2021 – Jan 2022 &nbsp;·&nbsp; 1 yr &nbsp;·&nbsp; Bangkok</div>
+            <div class="exp-desc">Graphics for a pro-gaming service provider and a cannabis-related enterprise. Developed UI concepts to build technical design proficiency.</div>
+            <!-- ลิงก์ไป Graphic Portfolio -->
+            <a class="exp-link" href="https://cafebyhomesupawed.my.canva.site/graphic-portfolio" target="_blank">View Graphic Portfolio →</a>
+          </div>
+        </div>
+
+        <!-- Skills tags -->
+        <ul class="skills-list reveal">
+          <li>UI/UX Design</li><li>User Research</li><li>Figma</li><li>Framer</li>
+          <li>Design Systems</li><li>Design Token</li><li>Journey Mapping</li>
+          <li>Empathy Mapping</li><li>Wireframing</li><li>Prototyping</li>
+          <li>Canva</li><li>Visual Design</li><li>Product Design</li>
+          <li>Branding</li><li>E-commerce Ops</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Work Section ───────────────────────────────────────────
+       รายการ Project แบบ List แต่ละแถวคลิกได้
+       ────────────────────────────────────────────────────────── -->
+  <section id="work">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Selected Work</h2>
+        <span class="section-count">02 — Projects</span>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project Card
+             data-bg    = สีพื้นหลัง hover preview
+             data-text  = สีข้อความใน hover preview
+             data-label = ชื่อที่แสดงใน hover preview
+             data-tag   = ประเภทงานใน hover preview
+             data-href  = URL ที่ไปเมื่อคลิก              -->
+        <div class="project-item reveal"
+             data-bg="#2C1810" data-text="rgba(196,168,130,.75)"
+             data-label="Cafe by Home" data-tag="UX/UI Design"
+             data-href="https://supawedroemklang.framer.website/works/%E0%B9%87homebakeryapllication">
+          <div>
+            <div class="project-num">001</div>
+            <div class="project-name">Cafe by Home</div>
+            <div class="project-desc">End-to-end UX/UI Case Study — Mobile ordering app eliminating peak-hour queue congestion at a university cafe via pre-order, real-time tracking, and room booking.</div>
+          </div>
+          <div class="project-category">UI &amp; UX Design</div>
+          <div class="project-year">2025–Present</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Case Study Section ─────────────────────────────────────
+       Preview card — แสดงสรุป คลิกไปอ่านเต็มใน Framer
+       ────────────────────────────────────────────────────────── -->
+  <section id="casestudy">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Case Study</h2>
+        <span class="section-count">03 — Deep Dive</span>
+      </div>
+
+      <!-- การ์ด Case Study — thumbnail บน, เนื้อหาล่าง -->
+      <div class="case-preview-card reveal">
+
+        <!-- รูปตัวอย่างจาก Framer -->
+        <div class="case-thumb">
+          <img src="https://framerusercontent.com/images/nj8brwCMezyvbsGHNTFIkW1tDE.png" alt="Cafe by Home App Preview" />
+        </div>
+
+        <!-- เนื้อหา: ชื่อ, คำอธิบาย, tags, ปุ่ม | metadata -->
+        <div class="case-preview-body">
+          <div>
+            <span class="case-badge">UX Case Study · 2025</span>
+            <div class="case-preview-title">Cafe by Home — Mobile App Redesign</div>
+            <p class="case-preview-desc">
+              A mobile-first ordering experience for a university on-campus cafe. Research-driven from problem discovery through user interviews (30 participants, 2-week study), empathy mapping, journey mapping, personas, and high-fidelity prototyping in Figma.
+              <br/><br/>
+              Core outcome: pre-order flow, real-time order tracking, and integrated meeting room booking — reducing peak-hour queue dependency for both customers and cafe staff.
+            </p>
+            <!-- Tags บอก process ที่ใช้ -->
+            <div class="case-tags">
+              <span class="case-tag">User Research</span>
+              <span class="case-tag">Empathy Mapping</span>
+              <span class="case-tag">Journey Map</span>
+              <span class="case-tag">Personas</span>
+              <span class="case-tag">Wireframing</span>
+              <span class="case-tag">Hi-Fi Prototype</span>
+              <span class="case-tag">Figma</span>
+              <span class="case-tag">Framer</span>
+            </div>
+            <!-- ปุ่มไปอ่าน Case Study เต็มใน Framer -->
+            <a href="https://supawedroemklang.framer.website/works/%E0%B9%87homebakeryapllication"
+               target="_blank" class="btn-primary" style="margin-top:2rem;display:inline-flex">
+              Read Full Case Study →
+            </a>
+          </div>
+
+          <!-- Metadata ขวามือ -->
+          <div class="case-meta-mini">
+            <span><strong>Role</strong></span>
+            <span>UX/UI Designer</span>
+            <span style="margin-top:.75rem"><strong>Duration</strong></span>
+            <span>Dec 2025 – Present</span>
+            <span style="margin-top:.75rem"><strong>Platform</strong></span>
+            <span>Mobile App</span>
+            <span style="margin-top:.75rem"><strong>Research</strong></span>
+            <span>30 participants</span>
+            <span style="margin-top:.75rem"><strong>Tools</strong></span>
+            <span>Figma · Framer</span>
+            <span>Canva · ChatGPT</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Expertise Section ──────────────────────────────────────
+       3 การ์ดบอกทักษะหลัก + Resume strip
+       ────────────────────────────────────────────────────────── -->
+  <section id="services">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 class="section-title">Expertise</h2>
+        <span class="section-count">04 — What I Do</span>
+      </div>
+
+      <!-- 3 การ์ดทักษะ — grid 3 คอลัมน์ -->
+      <div class="services-grid">
+
+        <div class="service-card reveal">
+          <div class="service-num">01</div>
+          <div class="service-name">UX Research &amp; Strategy</div>
+          <p class="service-text">User interviews, empathy mapping, journey mapping, pain-point synthesis — turning field observations into design decisions tied to measurable KPIs.</p>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-num">02</div>
+          <div class="service-name">UI &amp; Product Design</div>
+          <p class="service-text">Wireframes to polished hi-fi interfaces. Figma design systems, design tokens, component libraries, and dev-ready prototypes built for clean handoff.</p>
+        </div>
+
+        <div class="service-card reveal">
+          <div class="service-num">03</div>
+          <div class="service-name">Visual &amp; Graphic Design</div>
+          <p class="service-text">Brand identity, visual systems, and graphic design for digital and print — creating cohesive languages that communicate with clarity across every touchpoint.</p>
+        </div>
+
+      </div>
+
+      <!-- Resume Strip — คลิกทั้งแถวไป LinkedIn -->
+      <div class="resume-strip reveal" style="cursor:none"
+           onclick="window.open('https://www.linkedin.com/in/supawed-roemklang-a83b71234/','_blank')">
+        <div class="resume-strip-text">
+          <p>Looking for my full résumé?</p>
+          <p>Available on LinkedIn — includes work history, education, and references.</p>
+        </div>
+        <a href="https://www.linkedin.com/in/supawed-roemklang-a83b71234/" target="_blank"
+           class="btn-primary" style="white-space:nowrap">View LinkedIn →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Contact Section ────────────────────────────────────────
+       พื้นหลังเข้ม ข้อความสว่าง จัดกึ่งกลาง
+       ────────────────────────────────────────────────────────── -->
+  <section id="contact">
+    <p class="about-label">05 — Contact</p>
+    <h2 class="contact-title">
+      Let's connect<br/><em>&amp; create</em><br/>something great.
+    </h2>
+    <p class="contact-sub">Open to full-time roles, freelance projects, and good conversations. Based in Bangkok — available remotely.</p>
+
+    <!-- ปุ่มอีเมลหลัก -->
+    <a href="mailto:supawedroemklang@gmail.com" class="btn-light">
+      supawedroemklang@gmail.com &nbsp;↗
+    </a>
+
+    <!-- Social Links -->
+    <ul class="social-links">
+      <li>
+        <span class="s-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/supawed-roemklang-a83b71234/" target="_blank">linkedin.com/Supawed</a>
+      </li>
+      <li>
+        <span class="s-label">Facebook</span>
+        <a href="https://www.facebook.com/CISUM0511" target="_blank">Supawed Roemklang</a>
+      </li>
+      <li>
+        <span class="s-label">Graphic Portfolio</span>
+        <a href="https://cafebyhomesupawed.my.canva.site/graphic-portfolio" target="_blank">Canva Portfolio</a>
+      </li>
+      <li>
+        <span class="s-label">Framer Site</span>
+        <a href="https://supawedroemklang.framer.website" target="_blank">supawedroemklang.framer</a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Supawed Roemklang — UX &amp; UI Portfolio</p>
+    <p>Designed &amp; built by hand</p>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT — Logic การทำงานทั้งหมด
+       แบ่งเป็น: Cursor / Navbar / Scroll Reveal / Project Preview / Active Nav / Parallax
+       ============================================================ -->
+  <script>
+
+    // ── 1. CUSTOM CURSOR ────────────────────────────────────────
+    // ดึง element cursor มาใช้
+    const cursor = document.getElementById('cursor');
+
+    // mx,my = ตำแหน่งเมาส์จริง (อัปเดตทันที)
+    // cx,cy = ตำแหน่ง cursor บนหน้าจอ (ตามหลังเล็กน้อย เพื่อ smooth)
+    let mx=-100, my=-100, cx=-100, cy=-100;
+
+    // ฟัง event ทุกครั้งที่เมาส์เคลื่อน → เก็บตำแหน่งใหม่
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    // Loop รันตลอด 60fps — ขยับ cursor เข้าหาเมาส์ 18% ต่อ frame
+    // ทำให้เคลื่อนไหว smooth ไม่กระตุก
+    (function loop() {
+      cx += (mx - cx) * .18;
+      cy += (my - cy) * .18;
+      cursor.style.left = cx + 'px';
+      cursor.style.top  = cy + 'px';
+      requestAnimationFrame(loop); // เรียกซ้ำทุก frame
+    })();
+
+    // เมื่อเมาส์เข้า link/card → cursor ขยาย (.grow)
+    // เมื่อออก → cursor คืนขนาดเดิม
+    document.querySelectorAll('a, button, .project-item, .service-card, .resume-strip').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+    });
+
+    // ── 2. NAVBAR SCROLL STATE ──────────────────────────────────
+    // เมื่อ scroll เกิน 40px → เพิ่ม class .scrolled → Nav กลายเป็น frosted glass
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () =>
+      navbar.classList.toggle('scrolled', window.scrollY > 40),
+    { passive: true }); // passive: true = scroll ไม่กระตุก
+
+    // ── 3. SCROLL REVEAL ────────────────────────────────────────
+    // IntersectionObserver = ดักดูว่า element เข้ามาใน viewport หรือยัง
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { // element โผล่บนหน้าจอแล้ว
+
+          // หา element พี่น้องในกลุ่มเดียวกัน เพื่อทำ stagger delay
+          const siblings = Array.from(
+            entry.target.parentElement.querySelectorAll('.reveal')
+          );
+          const idx = siblings.indexOf(entry.target);
+
+          // delay ตาม index — ทำให้ทยอยโผล่ ไม่โผล่พร้อมกัน
+          setTimeout(() => entry.target.classList.add('visible'), idx * 90);
+
+          // หยุดดูหลังจากโผล่แล้ว (ประหยัด resource)
+          revealObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
+
+    // ลงทะเบียนทุก element ที่มี class .reveal
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ── 4. PROJECT HOVER PREVIEW ────────────────────────────────
+    // การ์ดสีที่ลอยตามเมาส์เมื่อ hover บน project
+    const preview   = document.getElementById('projectPreview');
+    const prevLabel = preview.querySelector('.prev-label');
+    const prevTag   = preview.querySelector('.prev-tag');
+    let previewVisible = false;
+
+    document.querySelectorAll('.project-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        // ดึงข้อมูลจาก data-* attribute ของแต่ละ project
+        preview.style.background = item.dataset.bg;
+        prevLabel.style.color    = item.dataset.text;
+        prevTag.style.color      = item.dataset.text;
+        prevLabel.textContent    = item.dataset.label;
+        prevTag.textContent      = item.dataset.tag;
+        preview.classList.add('visible');
+        previewVisible = true;
+      });
+      item.addEventListener('mouseleave', () => {
+        preview.classList.remove('visible');
+        previewVisible = false;
+      });
+      // คลิก project → เปิด link ใน tab ใหม่
+      if (item.dataset.href)
+        item.addEventListener('click', () => window.open(item.dataset.href, '_blank'));
+    });
+
+    // Preview ตามตำแหน่งเมาส์ตลอดเวลา
+    document.addEventListener('mousemove', e => {
+      if (!previewVisible) return;
+      preview.style.left = (e.clientX + 26) + 'px';
+      preview.style.top  = (e.clientY - 90) + 'px';
+    });
+
+    // ── 5. ACTIVE NAV HIGHLIGHT ─────────────────────────────────
+    // เมื่อ scroll ผ่าน section ไหน → ลิงก์ใน Nav section นั้นจะสว่างขึ้น
+    document.querySelectorAll('section[id]').forEach(s => {
+      new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            document.querySelectorAll('.nav-links a').forEach(a => {
+              // ถ้า href ตรงกับ id ของ section → สว่าง, ไม่ตรง → คืนค่าเดิม
+              a.style.color = a.getAttribute('href') === '#' + entry.target.id
+                ? 'var(--ink)' : '';
+            });
+          }
+        });
+      }, { threshold: .35 }).observe(s);
+    });
+
+    // ── 6. HERO PARALLAX ────────────────────────────────────────
+    // ตัวอักษร "Music" พื้นหลัง Hero เลื่อนช้ากว่า scroll → เกิด parallax
+    const heroBg = document.querySelector('.hero-bg-text');
+    if (heroBg) {
+      window.addEventListener('scroll', () => {
+        heroBg.style.transform = `translateY(${window.scrollY * .22}px)`;
+      }, { passive: true });
+    }
+
+  </script>
+</body>
+</html>
